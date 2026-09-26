@@ -244,7 +244,10 @@ elif st.session_state["login_status"]:
                 # 3. Multi-Object Face Tracking & Deduplication (IoU Tracker)
                 active_tracks = tracker.update(detected_faces_for_tracker, frame_idx)
 
-                # 4. Target Comparison & Visual Annotation
+                # Keep a pristine clean copy of the frame for spotless face thumbnail captures
+                clean_frame = frame.copy()
+
+                # 4. Target Comparison & Visual Annotation (Only highlight verified matches)
                 for track in active_tracks:
                     tx, ty, tbw, tbh = track.bbox
                     
@@ -266,12 +269,10 @@ elif st.session_state["login_status"]:
                     # Check match threshold
                     is_match = (highest_sim >= sim_threshold) and (best_match_target is not None)
 
-                    # Bounding box colors: Red for match, Green for tracked non-match
-                    box_color = (0, 0, 255) if is_match else (0, 255, 0)
-                    cv2.rectangle(frame, (tx, ty), (tx + tbw, ty + tbh), box_color, 2)
-
+                    # Only draw highlight box and alert label if a missing person is positively matched
                     if is_match and best_match_target:
-                        label = f"ALERT: {best_match_target['name']} ({int(highest_conf)}%) [ID:{track.track_id}]"
+                        cv2.rectangle(frame, (tx, ty), (tx + tbw, ty + tbh), (0, 0, 255), 2)
+                        label = f"MATCH: {best_match_target['name']} ({int(highest_conf)}%)"
                         cv2.putText(
                             frame,
                             label,
@@ -293,8 +294,8 @@ elif st.session_state["login_status"]:
                             timestamp_sec = frame_idx / fps_source
                             time_str = time.strftime("%H:%M:%S", time.gmtime(timestamp_sec))
 
-                            # Crop thumbnail of the detected face
-                            thumbnail_rgb = crop_face_thumbnail(frame, track.bbox, margin_ratio=0.3)
+                            # Crop spotless face thumbnail from the clean unannotated frame
+                            thumbnail_rgb = crop_face_thumbnail(clean_frame, track.bbox, margin_ratio=0.35)
 
                             alert_record = {
                                 "track_id": track.track_id,
@@ -311,16 +312,6 @@ elif st.session_state["login_status"]:
                                 "target_img": best_match_target["image_path"],
                             }
                             detected_alerts.append(alert_record)
-                    else:
-                        cv2.putText(
-                            frame,
-                            f"Track #{track.track_id}",
-                            (tx, max(15, ty - 5)),
-                            cv2.FONT_HERSHEY_SIMPLEX,
-                            0.45,
-                            (0, 255, 0),
-                            1,
-                        )
 
                 # Compute Telemetry
                 frame_latency_ms = (time.perf_counter() - frame_start) * 1000.0
