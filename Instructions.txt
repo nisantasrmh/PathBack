@@ -1,0 +1,66 @@
+================================================================================
+          AI Missing Person Recovery System (PathBack) - User Instructions
+================================================================================
+
+1. PREREQUISITES & ENVIRONMENT SETUP
+--------------------------------------------------------------------------------
+* Ensure Python 3.10+ (or Python 3.12) is installed on your system.
+* (Optional) Open PowerShell as Administrator and run the following once if 
+  script execution is restricted:
+      Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser
+
+* Install all required dependencies:
+      pip install -r requirements.txt
+
+
+2. RUNNING THE APPLICATIONS
+--------------------------------------------------------------------------------
+
+A. Desktop / Admin Portal:
+   - Command:
+         python -m streamlit run .\Home.py
+   - Or run the PowerShell script:
+         .\run_desktop_app.ps1
+   - Default Port: http://localhost:8501
+   - Features:
+       * Admin authentication & dashboard
+       * Register new missing person cases with facial feature extraction
+       * Browse and search all cases (Active & Resolved)
+       * Match Engine (AI face matching between public sightings & missing cases)
+       * Real-time CCTV Video & Footage frame scanner
+
+B. Mobile / Public Sighting Portal:
+   - Command:
+         python -m streamlit run .\mobile_app.py --server.port 8502
+   - Or run the PowerShell script:
+         .\run_mobile_app.ps1
+   - Default Port: http://localhost:8502
+   - Features:
+       * Public sighting submission portal for citizens and field officers
+       * Upload sighting photos with date, time, location & contact details
+       * Automated face mesh & embedding extraction on submission
+
+
+3. DEFAULT CREDENTIALS (ADMIN PORTAL)
+--------------------------------------------------------------------------------
+* Username : admin
+* Password : admin123
+* Configured in: login_config.yml
+
+
+4. AI MODELS & ARCHITECTURE
+--------------------------------------------------------------------------------
+* Models directory: models/
+  - SFace Deep Metric Recognition Model (sface.onnx)
+  - YuNet Face Detector (face_detection_yunet_2023mar.onnx)
+  - Mediapipe Face Mesh (468 facial landmark mesh extraction)
+* Database: sqlite_database.db (SQLModel / SQLite)
+
+
+5. DATABASE & MODEL RE-TRAINING
+--------------------------------------------------------------------------------
+* When new cases are added, the AI matching index dynamically updates.
+* To manually refresh the trained KNN classifier:
+      python pages/helper/train_model.py
+* To reset or reinitialize the database, you can back up or clear sqlite_database.db.
+================================================================================

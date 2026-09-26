@@ -1,0 +1,17 @@
+# Streamlit Authenticator Configuration
+credentials:
+  usernames:
+    admin:
+      email: admin@pathback.ai
+      name: System Administrator
+      city: Central HQ
+      area: Investigation Unit
+      role: Admin
+      password: '$2b$12$N39iZpHDT.bEqB.T5DwBKe2CGd58RSLQh474blhctS/jkBjiyL1EO' # admin123
+cookie:
+  expiry_days: 1
+  key: pathback_ai_secure_hmac_key_2026_auth_token_32bytes_random
+  name: pathback_auth_cookie_v2
+preauthorized:
+  emails:
+  - admin@pathback.ai
