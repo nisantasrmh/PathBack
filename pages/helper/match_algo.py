@@ -417,8 +417,12 @@ def match(
                 )
                 matched_results.append(record.to_dict())
 
-        # Sort matches by highest confidence percentage first
-        matched_results.sort(key=lambda x: x["confidence_pct"], reverse=True)
+        # Sort matches strictly by highest match confidence percentage first (Descending Rank)
+        matched_results.sort(key=lambda x: (x["confidence_pct"], x["similarity_score"]), reverse=True)
+
+        # Assign explicit 1-based ranking index to every candidate match
+        for rank_idx, record_dict in enumerate(matched_results, start=1):
+            record_dict["rank"] = rank_idx
 
         return {
             "status": True,
