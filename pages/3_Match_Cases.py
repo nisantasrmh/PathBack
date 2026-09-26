@@ -75,36 +75,36 @@ elif st.session_state["login_status"]:
                 sort_col, filter_col = st.columns([2, 2])
                 with sort_col:
                     sort_order = st.selectbox(
-                        "📊 Match Ranking Order",
+                        "Match Ranking Order",
                         [
-                            "🏆 Ranked by Highest Match % (Descending)",
-                            "📉 Ranked by Lowest Match % (Ascending)",
-                            "🕒 Most Recent Sighting First"
+                            "Highest Match % First (Descending)",
+                            "Lowest Match % First (Ascending)",
+                            "Most Recent Sighting First"
                         ]
                     )
 
                 with filter_col:
                     tier_filter = st.selectbox(
-                        "🏷️ Filter by Confidence Tier",
-                        ["All Tiers", "🟢 High Confidence Only (>=75%)", "🟡 Review Needed Only (50%-74%)"]
+                        "Filter by Confidence Tier",
+                        ["All Tiers", "High Confidence Only (>=75%)", "Review Needed Only (50%-74%)"]
                     )
 
                 # Filter by Tier
                 filtered_matches = list(raw_matches)
-                if tier_filter == "🟢 High Confidence Only (>=75%)":
+                if tier_filter == "High Confidence Only (>=75%)":
                     filtered_matches = [m for m in filtered_matches if m.get("confidence_tier") == ConfidenceTier.HIGH_CONFIDENCE.value or m["confidence_pct"] >= 75.0]
-                elif tier_filter == "🟡 Review Needed Only (50%-74%)":
+                elif tier_filter == "Review Needed Only (50%-74%)":
                     filtered_matches = [m for m in filtered_matches if m.get("confidence_tier") == ConfidenceTier.REVIEW_NEEDED.value or (50.0 <= m["confidence_pct"] < 75.0)]
 
                 # Apply sorting
-                if sort_order == "🏆 Ranked by Highest Match % (Descending)":
+                if sort_order == "Highest Match % First (Descending)":
                     filtered_matches.sort(key=lambda x: (x["confidence_pct"], x["similarity_score"]), reverse=True)
-                elif sort_order == "📉 Ranked by Lowest Match % (Ascending)":
+                elif sort_order == "Lowest Match % First (Ascending)":
                     filtered_matches.sort(key=lambda x: (x["confidence_pct"], x["similarity_score"]), reverse=False)
-                elif sort_order == "🕒 Most Recent Sighting First":
+                elif sort_order == "Most Recent Sighting First":
                     filtered_matches.sort(key=lambda x: str(x.get("public_submitted_on", "")), reverse=True)
 
-                st.markdown(f"### 📋 Showing `{len(filtered_matches)}` Ranked Candidate Matches:")
+                st.markdown(f"### Showing `{len(filtered_matches)}` Ranked Candidate Matches:")
 
                 for idx, match_item in enumerate(filtered_matches):
                     conf = match_item["confidence_pct"]
@@ -113,22 +113,8 @@ elif st.session_state["login_status"]:
                     pub_id = match_item["public_case_id"]
                     tier = match_item.get("confidence_tier", "Review Needed")
 
-                    # Rank Medal / Emoji
-                    rank_num = idx + 1
-                    if rank_num == 1:
-                        rank_badge = "🥇 Rank #1 (Top Match)"
-                    elif rank_num == 2:
-                        rank_badge = "🥈 Rank #2"
-                    elif rank_num == 3:
-                        rank_badge = "🥉 Rank #3"
-                    else:
-                        rank_badge = f"🎯 Rank #{rank_num}"
-
-                    # Header color based on tier
-                    is_high_conf = conf >= 75.0
-
                     with st.container():
-                        st.subheader(f"{rank_badge} — Match Confidence: {conf:.1f}% ({tier})")
+                        st.subheader(f"Rank #{idx + 1} — Match Confidence: {conf:.1f}% ({tier})")
 
                         col_left, col_mid, col_right = st.columns([3, 1.2, 3], gap="medium")
 

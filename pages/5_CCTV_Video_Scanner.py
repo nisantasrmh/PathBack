@@ -349,7 +349,7 @@ elif st.session_state["login_status"]:
                 detected_alerts.sort(key=lambda x: (x["confidence_pct"], x["similarity_score"]), reverse=True)
 
                 with alerts_container:
-                    st.markdown(f"### 🚨 Total Unique Verified Sightings: `{len(detected_alerts)}` (Ranked by Match %)")
+                    st.markdown(f"### Total Verified Sightings: `{len(detected_alerts)}` (Ranked by Match %)")
                     
                     for idx, alert in enumerate(detected_alerts):
                         t_name = alert["target_name"]
@@ -358,20 +358,9 @@ elif st.session_state["login_status"]:
                         t_id = alert["target_id"]
                         track_id = alert["track_id"]
 
-                        # Rank Medal
-                        rank_num = idx + 1
-                        if rank_num == 1:
-                            rank_badge = "🥇 Rank #1 (Top Match)"
-                        elif rank_num == 2:
-                            rank_badge = "🥈 Rank #2"
-                        elif rank_num == 3:
-                            rank_badge = "🥉 Rank #3"
-                        else:
-                            rank_badge = f"🎯 Rank #{rank_num}"
-
                         with st.container():
                             st.error(
-                                f"**{rank_badge}** — Matched Missing Person: **{t_name}** | "
+                                f"**Rank #{idx + 1}** — Matched Missing Person: **{t_name}** | "
                                 f"Confidence: **{t_conf}%** | Video Timestamp: **{t_time}** | Track ID: `#{track_id}`"
                             )
 
