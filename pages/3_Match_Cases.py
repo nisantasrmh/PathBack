@@ -104,7 +104,10 @@ elif st.session_state["login_status"]:
                 elif sort_order == "Most Recent Sighting First":
                     filtered_matches.sort(key=lambda x: str(x.get("public_submitted_on", "")), reverse=True)
 
-                st.markdown(f"### Showing `{len(filtered_matches)}` Ranked Candidate Matches:")
+                # Keep maximum 10 top matched people
+                filtered_matches = filtered_matches[:10]
+
+                st.markdown(f"### Showing Top `{len(filtered_matches)}` Ranked Matches (Max 10):")
 
                 for idx, match_item in enumerate(filtered_matches):
                     conf = match_item["confidence_pct"]

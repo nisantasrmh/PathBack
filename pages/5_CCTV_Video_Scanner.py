@@ -345,11 +345,12 @@ elif st.session_state["login_status"]:
 
             # Render Sighting Alerts Feed (Ranked strictly by highest match confidence percentage)
             if detected_alerts:
-                # Sort alerts by match percentage descending
+                # Sort alerts by match percentage descending and keep maximum 10 top matches
                 detected_alerts.sort(key=lambda x: (x["confidence_pct"], x["similarity_score"]), reverse=True)
+                detected_alerts = detected_alerts[:10]
 
                 with alerts_container:
-                    st.markdown(f"### Total Verified Sightings: `{len(detected_alerts)}` (Ranked by Match %)")
+                    st.markdown(f"### Total Verified Sightings: `{len(detected_alerts)}` (Top 10 Ranked by Match %)")
                     
                     for idx, alert in enumerate(detected_alerts):
                         t_name = alert["target_name"]
