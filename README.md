@@ -85,7 +85,7 @@ pip install -r requirements.txt
 ```bash
 python -m streamlit run .\Home.py
 ```
-*Or execute:* `.\run_desktop_app.ps1`  
+*Or execute:* `.\run_desktop_app.ps1`
 *Access URL:* **[http://localhost:8501](http://localhost:8501)**
 
 #### 🔑 Default Admin Credentials:
@@ -98,7 +98,7 @@ python -m streamlit run .\Home.py
 ```bash
 python -m streamlit run .\mobile_app.py --server.port 8502
 ```
-*Or execute:* `.\run_mobile_app.ps1`  
+*Or execute:* `.\run_mobile_app.ps1`
 *Access URL:* **[http://localhost:8502](http://localhost:8502)**
 
 ---

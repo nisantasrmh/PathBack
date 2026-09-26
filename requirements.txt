@@ -10,3 +10,5 @@ sqlmodel
 mediapipe
 streamlit-authenticator==0.4.2
 pyyaml
+faiss-cpu>=1.7.4
+
