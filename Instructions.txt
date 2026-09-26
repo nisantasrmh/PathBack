@@ -23,11 +23,12 @@ A. Desktop / Admin Portal:
          .\run_desktop_app.ps1
    - Default Port: http://localhost:8501
    - Features:
-       * Admin authentication & dashboard
-       * Register new missing person cases with facial feature extraction
-       * Browse and search all cases (Active & Resolved)
-       * Match Engine (AI face matching between public sightings & missing cases)
-       * Real-time CCTV Video & Footage frame scanner
+       * Admin authentication & role-based dashboard
+       * Register new missing person cases with automatic 128-D SFace extraction
+       * Browse, search, filter, and audit case resolutions (Active / Solved)
+       * FAISS AI Vector Match Engine (Sub-millisecond similarity lookups)
+       * Real-time CCTV Video Surveillance Scanner with MOG2 motion gating,
+         IoU multi-object face tracking, and deduplicated sighting alerts
 
 B. Mobile / Public Sighting Portal:
    - Command:
@@ -37,8 +38,8 @@ B. Mobile / Public Sighting Portal:
    - Default Port: http://localhost:8502
    - Features:
        * Public sighting submission portal for citizens and field officers
-       * Upload sighting photos with date, time, location & contact details
-       * Automated face mesh & embedding extraction on submission
+       * Upload photos or live camera captures with GPS & location coordinates
+       * Automated face detection & L2-normalized 128-D embedding extraction
 
 
 3. DEFAULT CREDENTIALS (ADMIN PORTAL)
@@ -51,16 +52,19 @@ B. Mobile / Public Sighting Portal:
 4. AI MODELS & ARCHITECTURE
 --------------------------------------------------------------------------------
 * Models directory: models/
-  - SFace Deep Metric Recognition Model (sface.onnx)
-  - YuNet Face Detector (face_detection_yunet_2023mar.onnx)
-  - Mediapipe Face Mesh (468 facial landmark mesh extraction)
-* Database: sqlite_database.db (SQLModel / SQLite)
+  - SFace Deep Metric Recognition Model (sface.onnx) - 128-D L2-normalized embeddings
+  - YuNet Face Detector (yunet.onnx) with CUDA GPU / OpenCV CPU caching
+  - FAISS Vector Index (biometric_index.faiss) with NumPy matrix fallback
+  - OpenCV MOG2 Motion Gating & IoU Multi-Object Tracking
+  - Haversine Geospatial Radius Query Engine
+* Database: sqlite_database.db (SQLModel / SQLite with automated schema migrations)
 
 
-5. DATABASE & MODEL RE-TRAINING
+5. DATABASE & VECTOR INDEXING
 --------------------------------------------------------------------------------
-* When new cases are added, the AI matching index dynamically updates.
-* To manually refresh the trained KNN classifier:
+* When new cases are added, the FAISS biometric index dynamically updates.
+* To manually build or refresh the offline FAISS vector index:
       python pages/helper/train_model.py
-* To reset or reinitialize the database, you can back up or clear sqlite_database.db.
-================================================================================
+* To reset or reinitialize the database, you can back up or delete sqlite_database.db;
+  the system will automatically recreate tables and apply migrations on startup.
+===============================================================================
