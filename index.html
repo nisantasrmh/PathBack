@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PathBack — AI Biometric Missing Person Recovery Platform</title>
-  <meta name="description" content="State-of-the-art AI-powered facial biometric matching, FAISS vector indexing, and surveillance video recovery system." />
+  <title>PathBack — AI-Powered Missing Person Recovery System (Investigation Portal)</title>
+  <meta name="description" content="Official PathBack Investigation Portal: Case registration, case management, FAISS facial biometric matching, and real-time CCTV video surveillance." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
   <style>
     :root {
-      --bg-dark: #090d16;
-      --bg-surface: #0f172a;
-      --bg-card: rgba(17, 24, 39, 0.85);
+      --bg-dark: #070b13;
+      --bg-surface: #0e1626;
+      --bg-card: rgba(15, 23, 42, 0.85);
       --bg-card-border: rgba(255, 255, 255, 0.08);
       --primary: #3b82f6;
+      --primary-hover: #2563eb;
       --primary-gradient: linear-gradient(135deg, #38bdf8 0%, #3b82f6 50%, #6366f1 100%);
       --accent: #10b981;
       --accent-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -23,245 +23,266 @@
       --danger: #ef4444;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
+      --sidebar-width: 280px;
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background-color: var(--bg-dark);
       color: var(--text-main);
       font-family: var(--font-sans);
-      line-height: 1.6;
-      overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 90% 20%, rgba(99, 102, 241, 0.14) 0%, transparent 45%),
-        radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
-    }
-
-    /* Navbar */
-    .navbar {
+      min-height: 100vh;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.15rem 2.5rem;
-      border-bottom: 1px solid var(--bg-card-border);
-      backdrop-filter: blur(20px);
-      background: rgba(9, 13, 22, 0.9);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      background-image: 
+        radial-gradient(circle at 12% 10%, rgba(56, 189, 248, 0.09) 0%, transparent 40%),
+        radial-gradient(circle at 88% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 45%),
+        radial-gradient(circle at 50% 85%, rgba(16, 185, 129, 0.06) 0%, transparent 50%);
     }
 
-    .brand {
+    /* Sidebar Navigation */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: rgba(11, 17, 32, 0.95);
+      border-right: 1px solid var(--bg-card-border);
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      padding: 1.5rem 1rem;
+    }
+
+    .brand-box {
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      padding: 0.5rem 0.75rem 1.75rem;
+      border-bottom: 1px solid var(--bg-card-border);
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: var(--primary-gradient);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+
+    .brand-title {
       font-weight: 800;
-      font-size: 1.35rem;
+      font-size: 1.25rem;
       letter-spacing: -0.02em;
     }
 
-    .brand-icon {
+    .brand-badge {
+      font-size: 0.65rem;
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      margin-left: 0.25rem;
+      font-weight: 700;
+    }
+
+    .user-profile-badge {
+      margin: 1.25rem 0;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 12px;
+      padding: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .user-avatar {
       width: 36px;
       height: 36px;
-      background: var(--primary-gradient);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-      font-size: 1.1rem;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-    }
-
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.95rem;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    .nav-links a:hover, .nav-links a.active {
-      color: var(--text-main);
-    }
-
-    .btn-github {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--bg-card-border);
-      color: var(--text-main);
-      padding: 0.5rem 1.1rem;
-      border-radius: 9999px;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 600;
-      font-size: 0.875rem;
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-
-    .btn-github:hover {
-      background: rgba(255, 255, 255, 0.15);
-      transform: translateY(-1px);
-    }
-
-    /* Hero Section */
-    .hero {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 4.5rem 2rem 2.5rem;
-      text-align: center;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.4rem 1.1rem;
-      background: rgba(59, 130, 246, 0.12);
-      border: 1px solid rgba(59, 130, 246, 0.28);
-      border-radius: 9999px;
-      color: #60a5fa;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-      letter-spacing: 0.04em;
-    }
-
-    .badge-dot {
-      width: 8px;
-      height: 8px;
-      background-color: #3b82f6;
       border-radius: 50%;
-      box-shadow: 0 0 10px #3b82f6;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
-    }
-
-    .hero h1 {
-      font-size: clamp(2.3rem, 4.8vw, 4rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.15;
-      margin-bottom: 1.25rem;
-    }
-
-    .hero-gradient-text {
-      background: var(--primary-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero p {
-      font-size: 1.15rem;
-      color: var(--text-muted);
-      max-width: 760px;
-      margin: 0 auto 2.2rem;
-    }
-
-    /* App Tab Switcher Bar */
-    .tabs-nav-container {
-      max-width: 1200px;
-      margin: 0 auto 2.5rem;
-      padding: 0 2rem;
-      display: flex;
-      justify-content: center;
-    }
-
-    .tabs-nav {
-      display: inline-flex;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid var(--bg-card-border);
-      padding: 0.4rem;
-      border-radius: 14px;
-      gap: 0.4rem;
-      backdrop-filter: blur(16px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      padding: 0.65rem 1.4rem;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
+      background: #1e293b;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: center;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      font-size: 1rem;
+    }
+
+    .user-details h5 {
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+
+    .user-details p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex: 1;
+      margin-top: 0.5rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+      cursor: pointer;
+      border: 1px solid transparent;
       transition: all 0.2s ease;
-      font-family: inherit;
     }
 
-    .tab-btn:hover {
-      color: var(--text-main);
+    .nav-item:hover {
       background: rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
     }
 
-    .tab-btn.active {
+    .nav-item.active {
       background: var(--primary-gradient);
       color: white;
-      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35);
+      box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
     }
 
-    /* Tab Content Areas */
-    .tab-pane {
+    .sidebar-footer {
+      border-top: 1px solid var(--bg-card-border);
+      padding-top: 1rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    /* Main Content Area */
+    .main-wrapper {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 2.5rem 3rem 4rem;
+      max-width: 1400px;
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .top-header h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .top-header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 0.2rem;
+    }
+
+    /* Stats Banner */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.25rem;
+    }
+
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      backdrop-filter: blur(14px);
+      transition: transform 0.2s ease;
+    }
+
+    .metric-card:hover { transform: translateY(-2px); }
+
+    .metric-title {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .metric-value {
+      font-size: 1.85rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      letter-spacing: -0.02em;
+    }
+
+    /* Page View Containers */
+    .view-panel {
       display: none;
       animation: fadeIn 0.3s ease;
     }
 
-    .tab-pane.active {
-      display: block;
-    }
+    .view-panel.active { display: block; }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Interactive Demo Sandbox */
-    .app-sandbox {
-      max-width: 1200px;
-      margin: 0 auto 4rem;
-      padding: 0 2rem;
-    }
-
-    .sandbox-card {
+    .card {
       background: var(--bg-card);
       border: 1px solid var(--bg-card-border);
-      border-radius: 20px;
-      padding: 2.2rem;
+      border-radius: 18px;
+      padding: 2rem;
       backdrop-filter: blur(16px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      margin-bottom: 2rem;
     }
 
-    .split-grid {
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.75rem;
+    }
+
+    /* Grid Layouts & Forms */
+    .two-col-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 2rem;
     }
 
-    @media (max-width: 860px) {
-      .split-grid { grid-template-columns: 1fr; }
+    @media (max-width: 960px) {
+      .sidebar { display: none; }
+      .main-wrapper { margin-left: 0; padding: 1.5rem; }
+      .two-col-grid { grid-template-columns: 1fr; }
     }
 
     .form-group {
@@ -270,7 +291,7 @@
 
     .form-group label {
       display: block;
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--text-muted);
       margin-bottom: 0.4rem;
@@ -278,46 +299,35 @@
 
     .form-input, .form-select, .form-textarea {
       width: 100%;
-      background: rgba(15, 23, 42, 0.8);
+      background: rgba(14, 22, 38, 0.85);
       border: 1px solid var(--bg-card-border);
       border-radius: 10px;
       padding: 0.75rem 1rem;
       color: var(--text-main);
       font-family: inherit;
       font-size: 0.95rem;
-      transition: border-color 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .form-input:focus, .form-select:focus, .form-textarea:focus {
       outline: none;
       border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
     }
 
     .dropzone {
       border: 2px dashed rgba(255, 255, 255, 0.15);
       border-radius: 12px;
-      padding: 2.5rem 1.5rem;
+      padding: 2.25rem 1.5rem;
       text-align: center;
       cursor: pointer;
-      background: rgba(15, 23, 42, 0.5);
+      background: rgba(14, 22, 38, 0.5);
       transition: all 0.2s ease;
-      position: relative;
     }
 
     .dropzone:hover {
       border-color: #3b82f6;
-      background: rgba(59, 130, 246, 0.04);
-    }
-
-    .dropzone-icon {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .dropzone p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
+      background: rgba(59, 130, 246, 0.05);
     }
 
     .preview-box {
@@ -331,549 +341,705 @@
 
     .preview-box img {
       width: 100%;
-      height: 240px;
+      height: 260px;
       object-fit: cover;
       display: block;
     }
 
-    .btn-submit {
-      width: 100%;
+    .btn-action {
       background: var(--primary-gradient);
       color: white;
       border: none;
       border-radius: 10px;
-      padding: 0.85rem;
-      font-size: 1rem;
+      padding: 0.85rem 1.5rem;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .btn-submit:hover {
+    .btn-action:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
     }
 
-    /* Results Feed / Live Table */
-    .results-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .result-item {
-      background: rgba(15, 23, 42, 0.7);
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--bg-card-border);
-      border-radius: 12px;
-      padding: 1.25rem;
-      margin-bottom: 1rem;
-      display: flex;
-      gap: 1.25rem;
-      align-items: center;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .result-item:hover {
-      transform: translateY(-2px);
-      border-color: rgba(59, 130, 246, 0.4);
-    }
-
-    .result-avatar {
-      width: 64px;
-      height: 64px;
+      color: var(--text-main);
       border-radius: 10px;
+      padding: 0.85rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Cases Table */
+    .filter-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid var(--bg-card-border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: rgba(14, 22, 38, 0.9);
+      padding: 1rem 1.25rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--bg-card-border);
+    }
+
+    td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--bg-card-border);
+      vertical-align: middle;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .case-thumb {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
       object-fit: cover;
       background: #1e293b;
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .result-info {
+    .badge-status {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+
+    .status-active {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .status-solved {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* Biometric Match Candidate Cards */
+    .match-card {
+      background: rgba(14, 22, 38, 0.75);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .match-card:hover {
+      border-color: rgba(59, 130, 246, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .match-images {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .match-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .match-vs {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .match-meta {
       flex: 1;
     }
 
-    .result-info h4 {
-      font-size: 1.05rem;
+    .match-meta h4 {
+      font-size: 1.15rem;
       font-weight: 700;
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.35rem;
     }
 
-    .result-info p {
-      color: var(--text-muted);
+    .match-meta p {
       font-size: 0.85rem;
-      line-height: 1.4;
+      color: var(--text-muted);
+      line-height: 1.5;
     }
 
-    .score-badge {
-      padding: 0.4rem 0.8rem;
-      border-radius: 8px;
+    .match-score {
+      text-align: right;
+    }
+
+    .score-circle {
       font-family: var(--font-mono);
-      font-weight: 700;
-      font-size: 0.9rem;
-      text-align: center;
-    }
-
-    .score-high {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      font-size: 1.5rem;
+      font-weight: 800;
       color: #34d399;
     }
 
-    .score-mid {
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      color: #fbbf24;
-    }
-
-    /* Architecture Features Grid */
-    .section {
-      max-width: 1200px;
-      margin: 4rem auto;
-      padding: 0 2rem;
-    }
-
-    .section-title {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .section-title h2 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.5rem;
-    }
-
-    .section-title p {
-      color: var(--text-muted);
-      font-size: 1.05rem;
-    }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--bg-card-border);
-      border-radius: 16px;
-      padding: 2rem;
-      backdrop-filter: blur(12px);
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(59, 130, 246, 0.4);
-    }
-
-    .card-icon {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      display: inline-block;
-    }
-
-    .card h3 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-    }
-
-    .card p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    .card .pill {
-      display: inline-block;
-      margin-top: 1rem;
-      font-family: var(--font-mono);
+    .score-tier {
       font-size: 0.78rem;
-      padding: 0.25rem 0.65rem;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.05);
-      color: #93c5fd;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    /* Swagger Dark Theme Overrides */
-    .swagger-ui {
-      filter: invert(88%) hue-rotate(180deg);
-    }
-    .swagger-ui .topbar { display: none; }
-    .swagger-ui img { filter: invert(100%) hue-rotate(180deg); }
-
-    /* Footer */
-    footer {
-      border-top: 1px solid var(--bg-card-border);
-      padding: 3rem 2rem;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-top: 5rem;
-    }
-
-    footer a {
+    /* Telemetry Pill */
+    .tele-pill {
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 9999px;
+      padding: 0.25rem 0.75rem;
       color: #60a5fa;
-      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
     }
   </style>
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="brand">
-      <div class="brand-icon">🔍</div>
-      <span>PathBack</span>
-    </div>
-    <div class="nav-links">
-      <a href="#demo" onclick="switchTab('match')">Live AI Matcher</a>
-      <a href="#demo" onclick="switchTab('report')">Report Sighting</a>
-      <a href="#demo" onclick="switchTab('cctv')">CCTV Surveillance</a>
-      <a href="#demo" onclick="switchTab('api')">REST API Docs</a>
-      <a href="https://github.com/nisantasrmh/PathBack" target="_blank" class="btn-github">
-        <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor">
-          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-        </svg>
-        GitHub
-      </a>
-    </div>
-  </nav>
-
-  <!-- Hero Section -->
-  <header class="hero">
-    <div class="badge">
-      <span class="badge-dot"></span>
-      Biometric Missing Person Recovery System v2.0
-    </div>
-    <h1>Intelligent Facial Biometric<br><span class="hero-gradient-text">Search & Recovery System</span></h1>
-    <p>
-      An advanced computer vision platform assisting law enforcement and citizens in identifying, locating, and tracking missing individuals using FAISS vector indexing, YuNet face detection, and SFace metric embeddings.
-    </p>
-  </header>
-
-  <!-- Navigation Tabs -->
-  <div class="tabs-nav-container" id="demo">
-    <div class="tabs-nav">
-      <button class="tab-btn active" id="tab-btn-match" onclick="switchTab('match')">
-        🎯 1-to-N AI Face Matcher
-      </button>
-      <button class="tab-btn" id="tab-btn-report" onclick="switchTab('report')">
-        🚨 Report Public Sighting
-      </button>
-      <button class="tab-btn" id="tab-btn-cctv" onclick="switchTab('cctv')">
-        📹 CCTV Stream Scanner
-      </button>
-      <button class="tab-btn" id="tab-btn-api" onclick="switchTab('api')">
-        ⚡ Interactive OpenAPI Docs
-      </button>
-    </div>
-  </div>
-
-  <!-- Interactive Sandbox Area -->
-  <main class="app-sandbox">
-    
-    <!-- 1. AI Face Matcher Tab -->
-    <div class="tab-pane active" id="tab-match">
-      <div class="sandbox-card">
-        <div class="split-grid">
-          <div>
-            <h3 style="margin-bottom: 0.5rem; font-size: 1.3rem;">Upload Sighting Photo</h3>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-              Performs instant sub-millisecond vector cosine search against all registered missing persons.
-            </p>
-
-            <div class="dropzone" onclick="document.getElementById('face-upload').click()">
-              <div class="dropzone-icon">📸</div>
-              <p><strong>Click to upload photograph</strong> or drag & drop</p>
-              <p style="font-size: 0.78rem; margin-top: 0.25rem;">Supports JPG, PNG, WEBP (Max 10MB)</p>
-              <input type="file" id="face-upload" accept="image/*" style="display:none" onchange="handleImagePreview(event, 'match-preview')">
-            </div>
-
-            <div class="preview-box" id="match-preview">
-              <img id="match-preview-img" src="" alt="Preview">
-            </div>
-
-            <div class="form-group" style="margin-top: 1.5rem;">
-              <label>Match Sensitivity Threshold (Cosine Similarity)</label>
-              <input type="range" class="form-input" min="40" max="95" value="60" id="conf-slider" oninput="document.getElementById('conf-val').innerText = this.value + '%'">
-              <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem;">
-                <span>Lenient (40%)</span>
-                <strong id="conf-val" style="color:#60a5fa;">60% (Recommended)</strong>
-                <span>Strict (95%)</span>
-              </div>
-            </div>
-
-            <button class="btn-submit" onclick="simulateMatch()">🚀 Run AI Biometric Match</button>
-          </div>
-
-          <div>
-            <div class="results-header">
-              <h3 style="font-size: 1.3rem;">Ranked AI Matches</h3>
-              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: #60a5fa;" id="match-status">Ready</span>
-            </div>
-
-            <div id="results-list">
-              <!-- Result 1 -->
-              <div class="result-item">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="result-avatar" alt="Target">
-                <div class="result-info">
-                  <h4>Aarav Sharma (Age: 17)</h4>
-                  <p><strong>Last Seen:</strong> Sector 18 Metro, New Delhi</p>
-                  <p><strong>Registered By:</strong> Officer V. Singh</p>
-                </div>
-                <div class="score-badge score-high">
-                  92.4%<br><span style="font-size:0.7rem; font-weight:normal;">MATCH</span>
-                </div>
-              </div>
-
-              <!-- Result 2 -->
-              <div class="result-item">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" class="result-avatar" alt="Target">
-                <div class="result-info">
-                  <h4>Rohan Verma (Age: 22)</h4>
-                  <p><strong>Last Seen:</strong> Bus Terminal, Jaipur</p>
-                  <p><strong>Registered By:</strong> Inspector R. Das</p>
-                </div>
-                <div class="score-badge score-mid">
-                  78.1%<br><span style="font-size:0.7rem; font-weight:normal;">REVIEW</span>
-                </div>
-              </div>
-
-              <!-- Result 3 -->
-              <div class="result-item">
-                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80" class="result-avatar" alt="Target">
-                <div class="result-info">
-                  <h4>Devendra Kumar (Age: 35)</h4>
-                  <p><strong>Last Seen:</strong> Railway Station, Patna</p>
-                  <p><strong>Registered By:</strong> Sub-Inspector Kumar</p>
-                </div>
-                <div class="score-badge score-mid">
-                  64.5%<br><span style="font-size:0.7rem; font-weight:normal;">REVIEW</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="brand-box">
+      <div class="brand-logo">🔍</div>
+      <div>
+        <div class="brand-title">PathBack <span class="brand-badge">PRO</span></div>
+        <div style="font-size: 0.7rem; color: var(--text-muted);">Investigation Portal</div>
       </div>
     </div>
 
-    <!-- 2. Public Sighting Portal Tab -->
-    <div class="tab-pane" id="tab-report">
-      <div class="sandbox-card">
-        <h3 style="margin-bottom: 0.5rem; font-size: 1.3rem;">🚨 Submit a Citizen Sighting Tip</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-          If you have spotted an individual matching an active missing bulletin, submit details directly to police investigators.
-        </p>
+    <div class="user-profile-badge">
+      <div class="user-avatar">👮</div>
+      <div class="user-details">
+        <h5>Admin Officer</h5>
+        <p>Central HQ • Investigation Unit</p>
+      </div>
+    </div>
 
-        <form id="sighting-form" onsubmit="handleSightingSubmit(event)">
-          <div class="split-grid">
+    <nav class="nav-menu">
+      <div class="nav-item active" onclick="showView('home')">
+        <span>🏠</span> Home Dashboard
+      </div>
+      <div class="nav-item" onclick="showView('register')">
+        <span>📝</span> Register New Case
+      </div>
+      <div class="nav-item" onclick="showView('cases')">
+        <span>📂</span> All Missing Cases
+      </div>
+      <div class="nav-item" onclick="showView('match')">
+        <span>🎯</span> AI Biometric Matcher
+      </div>
+      <div class="nav-item" onclick="showView('cctv')">
+        <span>📹</span> CCTV Surveillance Scanner
+      </div>
+      <div class="nav-item" onclick="showView('help')">
+        <span>❓</span> Help & Architecture
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="tele-pill">
+        <span style="width:6px; height:6px; background:#10b981; border-radius:50%;"></span>
+        FAISS SFace AI: Ready
+      </div>
+      <p>PathBack Recovery Platform v2.0</p>
+    </div>
+  </aside>
+
+  <!-- Main Investigation Portal Workspace -->
+  <main class="main-wrapper">
+
+    <!-- Top Header -->
+    <header class="top-header">
+      <div>
+        <h1 id="page-title">Investigation Command Dashboard</h1>
+        <p id="page-subtitle">Law Enforcement & Humanitarian Missing Person Recovery Engine</p>
+      </div>
+      <div style="display:flex; gap:0.75rem;">
+        <button class="btn-secondary" onclick="showView('register')">➕ New Missing Case</button>
+        <button class="btn-action" onclick="showView('match')">🚀 Run Biometric Scan</button>
+      </div>
+    </header>
+
+    <!-- Metrics Banner -->
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-title">🚨 Active Missing Cases</div>
+        <div class="metric-value" style="color: #f87171;" id="stat-active">14</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">✅ Solved / Reunited</div>
+        <div class="metric-value" style="color: #34d399;" id="stat-solved">28</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">📍 Public Sightings Logged</div>
+        <div class="metric-value" style="color: #60a5fa;" id="stat-sightings">42</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">🧠 FAISS Vector Dimension</div>
+        <div class="metric-value" style="color: #a78bfa;">128-D</div>
+      </div>
+    </section>
+
+    <!-- 1. HOME DASHBOARD VIEW -->
+    <section class="view-panel active" id="view-home">
+      <div class="card">
+        <h3 class="card-title">⚡ Quick Investigation Modules</h3>
+        <p class="card-subtitle">Access core operational recovery pipelines and biometric scanning tools</p>
+
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem;">
+          <div style="background:rgba(14,22,38,0.7); border:1px solid var(--bg-card-border); border-radius:14px; padding:1.5rem; cursor:pointer;" onclick="showView('register')">
+            <div style="font-size:2rem; margin-bottom:0.75rem;">📋</div>
+            <h4 style="margin-bottom:0.5rem;">Register New Missing Profile</h4>
+            <p style="color:var(--text-muted); font-size:0.875rem; margin-bottom:1rem;">
+              Upload clear photographs to extract SFace facial vectors and assign unique biometric tags.
+            </p>
+            <span style="color:#60a5fa; font-weight:600; font-size:0.85rem;">Open Case Registration ➡️</span>
+          </div>
+
+          <div style="background:rgba(14,22,38,0.7); border:1px solid var(--bg-card-border); border-radius:14px; padding:1.5rem; cursor:pointer;" onclick="showView('cases')">
+            <div style="font-size:2rem; margin-bottom:0.75rem;">📂</div>
+            <h4 style="margin-bottom:0.5rem;">Manage Registered Cases</h4>
+            <p style="color:var(--text-muted); font-size:0.875rem; margin-bottom:1rem;">
+              Filter cases by jurisdictional status, update resolution outcomes, and inspect biometric vectors.
+            </p>
+            <span style="color:#60a5fa; font-weight:600; font-size:0.85rem;">Browse Case Records ➡️</span>
+          </div>
+
+          <div style="background:rgba(14,22,38,0.7); border:1px solid var(--bg-card-border); border-radius:14px; padding:1.5rem; cursor:pointer;" onclick="showView('match')">
+            <div style="font-size:2rem; margin-bottom:0.75rem;">🎯</div>
+            <h4 style="margin-bottom:0.5rem;">FAISS Biometric Matcher</h4>
+            <p style="color:var(--text-muted); font-size:0.875rem; margin-bottom:1rem;">
+              Execute cosine similarity matrix matching between public sightings and missing records.
+            </p>
+            <span style="color:#60a5fa; font-weight:600; font-size:0.85rem;">Launch AI Matching ➡️</span>
+          </div>
+
+          <div style="background:rgba(14,22,38,0.7); border:1px solid var(--bg-card-border); border-radius:14px; padding:1.5rem; cursor:pointer;" onclick="showView('cctv')">
+            <div style="font-size:2rem; margin-bottom:0.75rem;">🎥</div>
+            <h4 style="margin-bottom:0.5rem;">CCTV Surveillance Scanner</h4>
+            <p style="color:var(--text-muted); font-size:0.875rem; margin-bottom:1rem;">
+              Process surveillance video streams with MOG2 motion gating and IoU multi-face tracking.
+            </p>
+            <span style="color:#60a5fa; font-weight:600; font-size:0.85rem;">Launch Video Scanner ➡️</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. REGISTER NEW CASE VIEW -->
+    <section class="view-panel" id="view-register">
+      <div class="card">
+        <h3 class="card-title">📋 Register New Missing Person Case</h3>
+        <p class="card-subtitle">Upload photograph and enter official bulletin details for instant 128-D facial feature extraction</p>
+
+        <form id="case-reg-form" onsubmit="handleCaseRegistration(event)">
+          <div class="two-col-grid">
             <div>
               <div class="form-group">
-                <label>Photograph of Sighted Person *</label>
-                <div class="dropzone" onclick="document.getElementById('sighting-photo').click()">
-                  <div class="dropzone-icon">📷</div>
-                  <p><strong>Upload or take a photo</strong></p>
-                  <input type="file" id="sighting-photo" accept="image/*" style="display:none" onchange="handleImagePreview(event, 'sighting-preview')">
+                <label>Clear Photograph for AI Face Scanning *</label>
+                <div class="dropzone" onclick="document.getElementById('reg-photo').click()">
+                  <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">📸</div>
+                  <p><strong>Click to upload photograph</strong></p>
+                  <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem;">YuNet & SFace will automatically detect face & compute embeddings</p>
+                  <input type="file" id="reg-photo" accept="image/*" style="display:none" onchange="handleImagePreview(event, 'reg-preview')">
                 </div>
-                <div class="preview-box" id="sighting-preview">
-                  <img id="sighting-preview-img" src="" alt="Sighting Preview">
+                <div class="preview-box" id="reg-preview">
+                  <img id="reg-preview-img" src="" alt="Face Scan Preview">
                 </div>
               </div>
 
               <div class="form-group">
-                <label>Exact Location / Landmark *</label>
-                <input type="text" class="form-input" placeholder="e.g. Near Anand Vihar ISBT, Delhi" required>
+                <label>Full Name of Missing Person *</label>
+                <input type="text" class="form-input" id="reg-name" placeholder="e.g. John Doe" required>
+              </div>
+
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+                <div class="form-group">
+                  <label>Age</label>
+                  <input type="number" class="form-input" id="reg-age" placeholder="Age (e.g. 16)" min="1" max="120" required>
+                </div>
+                <div class="form-group">
+                  <label>Gender</label>
+                  <select class="form-select" id="reg-gender">
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other / Unknown</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Father's / Guardian's Name</label>
+                <input type="text" class="form-input" id="reg-father" placeholder="Guardian name">
               </div>
             </div>
 
             <div>
               <div class="form-group">
-                <label>Your Name / Contact Officer</label>
-                <input type="text" class="form-input" placeholder="e.g. Rahul Sharma (Citizen / Volunteer)">
+                <label>Last Seen Location & Date *</label>
+                <input type="text" class="form-input" id="reg-lastseen" placeholder="e.g. Metro Station Sector 18, 12 Oct" required>
               </div>
 
               <div class="form-group">
-                <label>Contact Phone Number *</label>
-                <input type="tel" class="form-input" placeholder="10-digit mobile number for verification" required>
+                <label>Complainant / Reporting Officer Contact Phone *</label>
+                <input type="tel" class="form-input" id="reg-phone" placeholder="10-digit mobile number" required>
               </div>
 
               <div class="form-group">
-                <label>Distinguishing Features / Clothing Observed</label>
-                <textarea class="form-textarea" rows="4" placeholder="Wearing navy hoodie, black sneakers, mole on right cheek..."></textarea>
+                <label>Distinctive Physical Marks / Tattoos / Clothing</label>
+                <textarea class="form-textarea" rows="3" id="reg-marks" placeholder="Scar on left forehead, wearing black hooded jacket..."></textarea>
               </div>
 
-              <button type="submit" class="btn-submit" style="margin-top: 1rem;">
-                📩 Submit Sighting for Instant AI Scanning
+              <div class="form-group">
+                <label>Home Address / Town</label>
+                <input type="text" class="form-input" id="reg-address" placeholder="Residential town / city">
+              </div>
+
+              <button type="submit" class="btn-action" style="width: 100%; margin-top: 1rem; justify-content: center;">
+                💾 Save & Register Profile to Biometric Database
               </button>
             </div>
           </div>
         </form>
       </div>
-    </div>
+    </section>
 
-    <!-- 3. CCTV Video Surveillance Scanner Tab -->
-    <div class="tab-pane" id="tab-cctv">
-      <div class="sandbox-card">
-        <h3 style="margin-bottom: 0.5rem; font-size: 1.3rem;">📹 CCTV Video Surveillance AI Pipeline</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-          Simulates the high-throughput video pipeline with OpenCV MOG2 background motion gating and IoU face tracking.
-        </p>
+    <!-- 3. ALL CASES VIEW -->
+    <section class="view-panel" id="view-cases">
+      <div class="card">
+        <h3 class="card-title">📂 Missing Person Investigation Records</h3>
+        <p class="card-subtitle">Manage, search, and update resolution outcomes for registered cases</p>
 
-        <div class="split-grid">
+        <div class="filter-bar">
+          <input type="text" class="form-input" style="max-width: 320px;" placeholder="🔍 Search by name or location..." id="case-search" oninput="filterCasesTable()">
+          <select class="form-select" style="max-width: 200px;" id="case-status-filter" onchange="filterCasesTable()">
+            <option value="All">All Categories</option>
+            <option value="Active">Active (Unresolved)</option>
+            <option value="Solved">Solved (Found)</option>
+          </select>
+        </div>
+
+        <div class="table-container">
+          <table id="cases-table">
+            <thead>
+              <tr>
+                <th>Photo</th>
+                <th>Name / ID</th>
+                <th>Age & Gender</th>
+                <th>Last Seen Location</th>
+                <th>Complainant Phone</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="cases-table-body">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. AI BIOMETRIC MATCHER VIEW -->
+    <section class="view-panel" id="view-match">
+      <div class="card">
+        <h3 class="card-title">🎯 FAISS Deep Face Vector Matching Engine</h3>
+        <p class="card-subtitle">Executes sub-millisecond maximum inner product similarity search comparing public sightings with missing persons</p>
+
+        <div class="filter-bar" style="align-items: center;">
+          <div style="flex:1;">
+            <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:0.25rem;">
+              Confidence Sensitivity Threshold (SFace Cosine Similarity)
+            </label>
+            <input type="range" class="form-input" min="40" max="95" value="55" id="match-threshold-slider" oninput="document.getElementById('threshold-label').innerText = this.value + '%'">
+          </div>
+          <div style="font-family:var(--font-mono); font-weight:700; color:#60a5fa; min-width:80px; text-align:center;" id="threshold-label">
+            55%
+          </div>
+          <button class="btn-action" onclick="runBiometricScan()">🚀 Run AI Match Scan</button>
+        </div>
+
+        <div id="match-results-container" style="margin-top: 1.5rem;">
+          <!-- Result Cards -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CCTV VIDEO SCANNER VIEW -->
+    <section class="view-panel" id="view-cctv">
+      <div class="card">
+        <h3 class="card-title">📹 Real-Time CCTV & Surveillance Scanner</h3>
+        <p class="card-subtitle">MOG2 motion-detection gating, multi-face IoU tracking, and automated alert generation</p>
+
+        <div class="two-col-grid">
           <div>
-            <div style="background:#0a0f1d; border:1px solid var(--bg-card-border); border-radius:12px; height:280px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden;">
-              <div style="font-size:3rem; margin-bottom:0.5rem;">📹</div>
-              <p style="color:var(--text-muted); font-size:0.9rem;">CCTV Stream Simulation Feed</p>
-              <div style="position:absolute; top:12px; left:12px; background:rgba(239, 68, 68, 0.85); color:white; padding:0.25rem 0.65rem; border-radius:6px; font-size:0.75rem; font-weight:700; display:flex; align-items:center; gap:0.4rem;">
-                <span style="width:6px; height:6px; background:white; border-radius:50%; animation:pulse 1s infinite;"></span> LIVE STREAM
+            <div style="background:#090d18; border:1px solid var(--bg-card-border); border-radius:12px; height:320px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+              <div style="font-size:3.5rem; margin-bottom:0.5rem;">🎥</div>
+              <p style="color:var(--text-muted);">Surveillance Camera Feed Simulation</p>
+              <div style="position:absolute; top:12px; left:12px; background:rgba(239, 68, 68, 0.85); color:white; padding:0.25rem 0.65rem; border-radius:6px; font-size:0.75rem; font-weight:700;">
+                LIVE FEED • CAM-04 (Terminal 2)
               </div>
             </div>
 
             <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem; margin-top:1.25rem;">
-              <div style="background:rgba(15,23,42,0.8); border:1px solid var(--bg-card-border); border-radius:10px; padding:0.85rem; text-align:center;">
-                <div style="font-size:0.75rem; color:var(--text-muted);">PIPELINE FPS</div>
-                <div style="font-size:1.35rem; font-weight:700; color:#38bdf8;" id="sim-fps">42.8</div>
+              <div style="background:rgba(14,22,38,0.8); border:1px solid var(--bg-card-border); border-radius:10px; padding:0.85rem; text-align:center;">
+                <div style="font-size:0.75rem; color:var(--text-muted);">FPS THROUGHPUT</div>
+                <div style="font-size:1.4rem; font-weight:700; color:#38bdf8;" id="cctv-fps">44.2</div>
               </div>
-              <div style="background:rgba(15,23,42,0.8); border:1px solid var(--bg-card-border); border-radius:10px; padding:0.85rem; text-align:center;">
+              <div style="background:rgba(14,22,38,0.8); border:1px solid var(--bg-card-border); border-radius:10px; padding:0.85rem; text-align:center;">
                 <div style="font-size:0.75rem; color:var(--text-muted);">MOG2 GATING</div>
-                <div style="font-size:1.35rem; font-weight:700; color:#10b981;">Active</div>
+                <div style="font-size:1.4rem; font-weight:700; color:#10b981;">3.4x Faster</div>
               </div>
-              <div style="background:rgba(15,23,42,0.8); border:1px solid var(--bg-card-border); border-radius:10px; padding:0.85rem; text-align:center;">
-                <div style="font-size:0.75rem; color:var(--text-muted);">TRACKS</div>
-                <div style="font-size:1.35rem; font-weight:700; color:#f59e0b;" id="sim-tracks">4</div>
+              <div style="background:rgba(14,22,38,0.8); border:1px solid var(--bg-card-border); border-radius:10px; padding:0.85rem; text-align:center;">
+                <div style="font-size:0.75rem; color:var(--text-muted);">ACTIVE TRACKS</div>
+                <div style="font-size:1.4rem; font-weight:700; color:#f59e0b;">5 Faces</div>
               </div>
             </div>
           </div>
 
           <div>
-            <h4 style="font-size:1.1rem; margin-bottom:0.75rem;">Real-Time Detections Feed</h4>
+            <h4 style="font-size:1.1rem; margin-bottom:1rem;">🚨 Sighting Alert Feed</h4>
             
-            <div class="result-item" style="border-left: 4px solid #ef4444;">
-              <div class="result-info">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <h4>🚨 ALERT: Target ID #104 Identified</h4>
-                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">00:03:14</span>
+            <div class="match-card" style="border-left: 4px solid #ef4444; padding:1.25rem;">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" style="width:64px; height:64px; border-radius:8px; object-fit:cover;">
+              <div class="match-meta">
+                <div style="display:flex; justify-content:space-between;">
+                  <h4>Target Alert: Aarav Sharma</h4>
+                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:#f87171;">Just now</span>
                 </div>
-                <p>Tracked face match for <strong>Aarav Sharma</strong> (Confidence: 89.2%)</p>
-                <div style="margin-top:0.4rem; font-size:0.8rem; color:#94a3b8;">
-                  Bounding Box: [142, 88, 76, 92] • MOG2 Motion Triggered
-                </div>
+                <p>Tracked with <strong>91.4% confidence</strong>. SFace feature cosine similarity = 0.84.</p>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">Location: North Exit Gate • Track #28</p>
               </div>
             </div>
 
-            <div class="result-item" style="border-left: 4px solid #3b82f6;">
-              <div class="result-info">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <h4>ℹ️ Track #12 Discarded (Below Threshold)</h4>
-                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">00:03:10</span>
+            <div class="match-card" style="border-left: 4px solid #10b981; padding:1.25rem;">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" style="width:64px; height:64px; border-radius:8px; object-fit:cover;">
+              <div class="match-meta">
+                <div style="display:flex; justify-content:space-between;">
+                  <h4>Target Alert: Rohan Verma</h4>
+                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:#10b981;">14 mins ago</span>
                 </div>
-                <p>Non-target pedestrian face tracked and deduplicated</p>
+                <p>Tracked with <strong>79.8% confidence</strong> (Review Needed tier).</p>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">Location: Waiting Lounge B • Track #19</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- 4. Interactive OpenAPI Docs Tab -->
-    <div class="tab-pane" id="tab-api">
-      <div class="sandbox-card" style="padding: 1.5rem;">
-        <h3 style="margin-bottom: 0.5rem; font-size: 1.3rem;">⚡ Enterprise OpenAPI 3.1 Specification</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
-          Interactive documentation powered by Swagger UI. Inspect request models, response schemas, and authentication headers.
-        </p>
-        <div id="swagger-ui"></div>
+    <!-- 6. HELP & DOCUMENTATION VIEW -->
+    <section class="view-panel" id="view-help">
+      <div class="card">
+        <h3 class="card-title">❓ PathBack System Documentation & AI Pipeline</h3>
+        <p class="card-subtitle">Comprehensive guide on biometric algorithms, FAISS indexing, and deployment</p>
+
+        <div style="display:flex; flex-direction:column; gap:1.5rem;">
+          <div style="background:rgba(14,22,38,0.7); border:1px solid var(--bg-card-border); border-radius:12px; padding:1.5rem;">
+            <h4 style="color:#60a5fa; margin-bottom:0.5rem;">1. YuNet Face Detection</h4>
+            <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6;">
+              YuNet is a lightweight, edge-optimized convolutional neural network producing high-precision bounding boxes and 5 facial landmark keypoints under extreme lighting and angle variations.
+            </p>
+          </div>
+
+          <div style="background:rgba(14,22,38,0.7); border:1px solid var(--bg-card-border); border-radius:12px; padding:1.5rem;">
+            <h4 style="color:#60a5fa; margin-bottom:0.5rem;">2. SFace Deep Metric Recognition (128-D)</h4>
+            <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6;">
+              Extracts strictly L2-normalized 128-dimensional biometric embeddings. When normalized to unit Euclidean norm, dot product is mathematically equivalent to Cosine Similarity.
+            </p>
+          </div>
+
+          <div style="background:rgba(14,22,38,0.7); border:1px solid var(--bg-card-border); border-radius:12px; padding:1.5rem;">
+            <h4 style="color:#60a5fa; margin-bottom:0.5rem;">3. FAISS Vector Search (IndexFlatIP & IndexHNSWFlat)</h4>
+            <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6;">
+              Powers sub-millisecond similarity lookups comparing tens of thousands of missing person records against public tips with automatic fallback to vectorized NumPy dot products.
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
   </main>
 
-  <!-- Architecture Features Grid -->
-  <section class="section" id="architecture">
-    <div class="section-title">
-      <h2>Engineered for High-Throughput Search</h2>
-      <p>State-of-the-art computer vision algorithms optimized for edge & server environments</p>
-    </div>
-
-    <div class="feature-grid">
-      <div class="card">
-        <div class="card-icon">⚡</div>
-        <h3>FAISS Biometric Vector Engine</h3>
-        <p>Sub-millisecond similarity lookups comparing missing person profiles against field sightings using L2-normalized 128-D SFace embeddings with NumPy matrix fallback.</p>
-        <div class="pill">IndexFlatIP • IndexHNSWFlat</div>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">📹</div>
-        <h3>Real-Time CCTV Scanner</h3>
-        <p>Surveillance video scanner utilizing MOG2 motion-detection gating to bypass static scenes (3–5x FPS speedup) and IoU tracking with alert deduplication.</p>
-        <div class="pill">MOG2 Gating • IoU Multi-Tracker</div>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">🌐</div>
-        <h3>FastAPI REST Microservice</h3>
-        <p>Production REST backend providing validated Pydantic endpoints for automated case registration, public sighting reports, and Haversine geospatial proximity search.</p>
-        <div class="pill">OpenAPI 3.1 • Async Worker Queue</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <p>
-      <strong>PathBack</strong> — Humanitarian AI Computer Vision Project. Open Source under MIT License.<br>
-      Deployed via GitHub Pages • <a href="https://github.com/nisantasrmh/PathBack">github.com/nisantasrmh/PathBack</a>
-    </p>
-  </footer>
-
-  <!-- Swagger UI Scripts -->
-  <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js"></script>
   <script>
-    let swaggerLoaded = false;
+    // In-memory case records for the interactive portal
+    let casesData = [
+      {
+        id: "case-01",
+        name: "Aarav Sharma",
+        age: 17,
+        gender: "Male",
+        lastSeen: "Sector 18 Metro, New Delhi",
+        phone: "+91 98765 43210",
+        status: "Active",
+        photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
+      },
+      {
+        id: "case-02",
+        name: "Rohan Verma",
+        age: 22,
+        gender: "Male",
+        lastSeen: "Central Bus Stand, Jaipur",
+        phone: "+91 98111 22334",
+        status: "Active",
+        photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"
+      },
+      {
+        id: "case-03",
+        name: "Pooja Patel",
+        age: 15,
+        gender: "Female",
+        lastSeen: "Near City Garden, Ahmedabad",
+        phone: "+91 99000 88776",
+        status: "Solved",
+        photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80"
+      },
+      {
+        id: "case-04",
+        name: "Devendra Kumar",
+        age: 35,
+        gender: "Male",
+        lastSeen: "Railway Station Platform 2, Patna",
+        phone: "+91 97777 55443",
+        status: "Active",
+        photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80"
+      }
+    ];
 
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    function showView(viewId) {
+      document.querySelectorAll('.view-panel').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
 
-      const activePane = document.getElementById('tab-' + tabId);
-      const activeBtn = document.getElementById('tab-btn-' + tabId);
+      const targetView = document.getElementById('view-' + viewId);
+      if (targetView) targetView.classList.add('active');
 
-      if (activePane) activePane.classList.add('active');
-      if (activeBtn) activeBtn.classList.add('active');
+      // Update titles
+      const titles = {
+        'home': ['Investigation Command Dashboard', 'Law Enforcement & Humanitarian Missing Person Recovery Engine'],
+        'register': ['Register New Missing Person Case', 'Upload photograph and record missing person attributes for AI scanning'],
+        'cases': ['Case Management & History', 'Search, filter, and update resolution outcomes for registered records'],
+        'match': ['AI Deep Facial Biometric Matcher', 'Compare registered cases against field sightings using FAISS vector indexing'],
+        'cctv': ['CCTV Video Surveillance AI Scanner', 'Real-time surveillance scanner with MOG2 motion gating and IoU face tracking'],
+        'help': ['Help & Operational Guide', 'Technical architecture and step-by-step investigation instructions']
+      };
 
-      if (tabId === 'api' && !swaggerLoaded) {
-        initSwagger();
+      if (titles[viewId]) {
+        document.getElementById('page-title').innerText = titles[viewId][0];
+        document.getElementById('page-subtitle').innerText = titles[viewId][1];
+      }
+
+      // Highlight navigation button
+      const navItems = document.querySelectorAll('.nav-item');
+      const viewMap = {'home':0, 'register':1, 'cases':2, 'match':3, 'cctv':4, 'help':5};
+      if (navItems[viewMap[viewId]]) {
+        navItems[viewMap[viewId]].classList.add('active');
+      }
+
+      if (viewId === 'cases') renderCasesTable();
+      if (viewId === 'match') runBiometricScan();
+    }
+
+    function renderCasesTable() {
+      const tbody = document.getElementById('cases-table-body');
+      tbody.innerHTML = '';
+
+      casesData.forEach(c => {
+        const isSolved = (c.status === "Solved");
+        const statusBadge = isSolved ? `<span class="badge-status status-solved">✅ Solved / Reunited</span>` : `<span class="badge-status status-active">🚨 Active Missing</span>`;
+        const toggleBtnText = isSolved ? "Mark Active" : "✅ Mark Solved";
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><img src="${c.photo}" class="case-thumb" alt="${c.name}"></td>
+          <td><strong>${c.name}</strong><br><span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">${c.id}</span></td>
+          <td>${c.age} yrs • ${c.gender}</td>
+          <td>${c.lastSeen}</td>
+          <td>${c.phone}</td>
+          <td>${statusBadge}</td>
+          <td>
+            <button class="btn-secondary" style="padding:0.4rem 0.8rem; font-size:0.8rem;" onclick="toggleCaseStatus('${c.id}')">
+              ${toggleBtnText}
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      updateStats();
+    }
+
+    function toggleCaseStatus(caseId) {
+      const c = casesData.find(item => item.id === caseId);
+      if (c) {
+        c.status = (c.status === "Solved") ? "Active" : "Solved";
+        renderCasesTable();
       }
     }
 
-    function initSwagger() {
-      swaggerLoaded = true;
-      SwaggerUIBundle({
-        url: "./openapi.json",
-        dom_id: '#swagger-ui',
-        deepLinking: true,
-        presets: [
-          SwaggerUIBundle.presets.apis,
-          SwaggerUIBundle.SwaggerUIStandalonePreset
-        ],
-        layout: "BaseLayout",
-        defaultModelsExpandDepth: 1
+    function filterCasesTable() {
+      const query = document.getElementById('case-search').value.toLowerCase();
+      const statusFilter = document.getElementById('case-status-filter').value;
+      const rows = document.querySelectorAll('#cases-table-body tr');
+
+      rows.forEach(r => {
+        const text = r.innerText.toLowerCase();
+        const matchesQuery = text.includes(query);
+        const matchesStatus = (statusFilter === "All") || text.includes(statusFilter.toLowerCase());
+        r.style.display = (matchesQuery && matchesStatus) ? "" : "none";
       });
     }
 
-    function handleImagePreview(event, previewContainerId) {
+    function handleImagePreview(event, containerId) {
       const file = event.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-          const container = document.getElementById(previewContainerId);
+          const container = document.getElementById(containerId);
           const img = container.querySelector('img');
           img.src = e.target.result;
           container.style.display = 'block';
@@ -882,30 +1048,117 @@
       }
     }
 
-    function simulateMatch() {
-      const statusEl = document.getElementById('match-status');
-      statusEl.innerText = "Scanning 128-D FAISS index...";
-      statusEl.style.color = "#fbbf24";
+    function handleCaseRegistration(e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value;
+      const age = document.getElementById('reg-age').value;
+      const gender = document.getElementById('reg-gender').value;
+      const lastSeen = document.getElementById('reg-lastseen').value;
+      const phone = document.getElementById('reg-phone').value;
+      const photoEl = document.getElementById('reg-preview-img');
+      const photoSrc = photoEl.src || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80";
 
-      setTimeout(() => {
-        statusEl.innerText = "Match Complete (3 Found)";
-        statusEl.style.color = "#34d399";
-      }, 700);
+      const newCase = {
+        id: "case-" + (casesData.length + 1).toString().padStart(2, '0'),
+        name: name,
+        age: parseInt(age) || 18,
+        gender: gender,
+        lastSeen: lastSeen,
+        phone: phone,
+        status: "Active",
+        photo: photoSrc
+      };
+
+      casesData.unshift(newCase);
+      alert(`✅ Case for ${name} registered successfully with 128-D SFace feature embeddings!`);
+      e.target.reset();
+      document.getElementById('reg-preview').style.display = 'none';
+      showView('cases');
     }
 
-    function handleSightingSubmit(e) {
-      e.preventDefault();
-      alert("✅ Sighting Report Submitted Successfully! SFace deep embeddings extracted and queued for law enforcement verification.");
-      e.target.reset();
-      document.getElementById('sighting-preview').style.display = 'none';
+    function runBiometricScan() {
+      const container = document.getElementById('match-results-container');
+      container.innerHTML = `
+        <div style="text-align:center; padding:2rem; color:var(--text-muted);">
+          <div style="font-size:2rem; margin-bottom:0.5rem;">⚡</div>
+          Scanning FAISS vector index across active missing person records...
+        </div>
+      `;
+
+      setTimeout(() => {
+        container.innerHTML = `
+          <!-- Candidate 1 -->
+          <div class="match-card">
+            <div class="match-images">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="match-avatar" alt="Registered">
+              <span class="match-vs">VS</span>
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="match-avatar" alt="Sighting">
+            </div>
+            <div class="match-meta">
+              <h4>Candidate #1: Aarav Sharma</h4>
+              <p><strong>Registered Case ID:</strong> case-01 &nbsp;|&nbsp; <strong>Age:</strong> 17</p>
+              <p><strong>Public Sighting:</strong> Sector 18 Bus Stand near Food Court</p>
+              <p><strong>Finder Mobile:</strong> +91 98765 43210 &nbsp;|&nbsp; <strong>Reported On:</strong> 2026-10-10 14:15</p>
+            </div>
+            <div class="match-score">
+              <div class="score-circle">93.8%</div>
+              <div class="score-tier" style="color:#34d399;">High Confidence</div>
+              <button class="btn-action" style="margin-top:0.5rem; padding:0.4rem 0.8rem; font-size:0.8rem;" onclick="confirmMatch('case-01')">
+                ✅ Confirm & Mark Found
+              </button>
+            </div>
+          </div>
+
+          <!-- Candidate 2 -->
+          <div class="match-card">
+            <div class="match-images">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" class="match-avatar" alt="Registered">
+              <span class="match-vs">VS</span>
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" class="match-avatar" alt="Sighting">
+            </div>
+            <div class="match-meta">
+              <h4>Candidate #2: Rohan Verma</h4>
+              <p><strong>Registered Case ID:</strong> case-02 &nbsp;|&nbsp; <strong>Age:</strong> 22</p>
+              <p><strong>Public Sighting:</strong> Metro Station Gate 3, Jaipur</p>
+              <p><strong>Finder Mobile:</strong> +91 98111 22334 &nbsp;|&nbsp; <strong>Reported On:</strong> 2026-10-10 11:30</p>
+            </div>
+            <div class="match-score">
+              <div class="score-circle" style="color:#fbbf24;">78.5%</div>
+              <div class="score-tier" style="color:#fbbf24;">Review Needed</div>
+              <button class="btn-secondary" style="margin-top:0.5rem; padding:0.4rem 0.8rem; font-size:0.8rem;" onclick="confirmMatch('case-02')">
+                Review Details
+              </button>
+            </div>
+          </div>
+        `;
+      }, 500);
+    }
+
+    function confirmMatch(caseId) {
+      const c = casesData.find(item => item.id === caseId);
+      if (c) {
+        c.status = "Solved";
+        alert(`🎉 Case ${c.name} has been verified and marked as Solved / Reunited!`);
+        showView('cases');
+      }
+    }
+
+    function updateStats() {
+      const activeCount = casesData.filter(c => c.status === "Active").length;
+      const solvedCount = casesData.filter(c => c.status === "Solved").length;
+      document.getElementById('stat-active').innerText = activeCount;
+      document.getElementById('stat-solved').innerText = solvedCount;
     }
 
     // Interval to simulate live CCTV stream telemetry
     setInterval(() => {
-      const fps = (41.5 + Math.random() * 3.5).toFixed(1);
-      const fpsEl = document.getElementById('sim-fps');
+      const fps = (43.0 + Math.random() * 3.0).toFixed(1);
+      const fpsEl = document.getElementById('cctv-fps');
       if (fpsEl) fpsEl.innerText = fps;
     }, 1500);
+
+    // Initial render
+    renderCasesTable();
   </script>
 </body>
 </html>
