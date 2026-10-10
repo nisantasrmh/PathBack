@@ -11,12 +11,16 @@
   <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
   <style>
     :root {
-      --bg-dark: #0a0e17;
-      --bg-card: rgba(16, 24, 40, 0.75);
+      --bg-dark: #090d16;
+      --bg-surface: #0f172a;
+      --bg-card: rgba(17, 24, 39, 0.85);
       --bg-card-border: rgba(255, 255, 255, 0.08);
       --primary: #3b82f6;
       --primary-gradient: linear-gradient(135deg, #38bdf8 0%, #3b82f6 50%, #6366f1 100%);
       --accent: #10b981;
+      --accent-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --warning: #f59e0b;
+      --danger: #ef4444;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -36,9 +40,9 @@
       line-height: 1.6;
       overflow-x: hidden;
       background-image: 
-        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 85% 30%, rgba(99, 102, 241, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 50% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 90% 20%, rgba(99, 102, 241, 0.14) 0%, transparent 45%),
+        radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
     }
 
     /* Navbar */
@@ -46,10 +50,10 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.25rem 2.5rem;
+      padding: 1.15rem 2.5rem;
       border-bottom: 1px solid var(--bg-card-border);
-      backdrop-filter: blur(16px);
-      background: rgba(10, 14, 23, 0.85);
+      backdrop-filter: blur(20px);
+      background: rgba(9, 13, 22, 0.9);
       position: sticky;
       top: 0;
       z-index: 100;
@@ -90,7 +94,7 @@
       transition: color 0.2s ease;
     }
 
-    .nav-links a:hover {
+    .nav-links a:hover, .nav-links a.active {
       color: var(--text-main);
     }
 
@@ -118,7 +122,7 @@
     .hero {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 5rem 2rem 3rem;
+      padding: 4.5rem 2rem 2.5rem;
       text-align: center;
     }
 
@@ -126,16 +130,15 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.35rem 1rem;
+      padding: 0.4rem 1.1rem;
       background: rgba(59, 130, 246, 0.12);
-      border: 1px solid rgba(59, 130, 246, 0.25);
+      border: 1px solid rgba(59, 130, 246, 0.28);
       border-radius: 9999px;
       color: #60a5fa;
       font-size: 0.85rem;
       font-weight: 600;
       margin-bottom: 1.5rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
     }
 
     .badge-dot {
@@ -153,11 +156,11 @@
     }
 
     .hero h1 {
-      font-size: clamp(2.5rem, 5vw, 4.2rem);
+      font-size: clamp(2.3rem, 4.8vw, 4rem);
       font-weight: 800;
       letter-spacing: -0.03em;
       line-height: 1.15;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
 
     .hero-gradient-text {
@@ -170,54 +173,260 @@
       font-size: 1.15rem;
       color: var(--text-muted);
       max-width: 760px;
+      margin: 0 auto 2.2rem;
+    }
+
+    /* App Tab Switcher Bar */
+    .tabs-nav-container {
+      max-width: 1200px;
       margin: 0 auto 2.5rem;
-    }
-
-    .hero-actions {
+      padding: 0 2rem;
       display: flex;
-      gap: 1rem;
       justify-content: center;
-      flex-wrap: wrap;
     }
 
-    .btn-primary {
-      background: var(--primary-gradient);
-      color: white;
-      padding: 0.85rem 1.8rem;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
-      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.35);
-      transition: all 0.2s ease;
+    .tabs-nav {
       display: inline-flex;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--bg-card-border);
+      padding: 0.4rem;
+      border-radius: 14px;
+      gap: 0.4rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.65rem 1.4rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
       align-items: center;
       gap: 0.5rem;
-    }
-
-    .btn-primary:hover {
-      box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5);
-      transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--bg-card-border);
-      color: var(--text-main);
-      padding: 0.85rem 1.8rem;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1rem;
       transition: all 0.2s ease;
+      font-family: inherit;
     }
 
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active {
+      background: var(--primary-gradient);
+      color: white;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35);
+    }
+
+    /* Tab Content Areas */
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Interactive Demo Sandbox */
+    .app-sandbox {
+      max-width: 1200px;
+      margin: 0 auto 4rem;
+      padding: 0 2rem;
+    }
+
+    .sandbox-card {
+      background: var(--bg-card);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 20px;
+      padding: 2.2rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 860px) {
+      .split-grid { grid-template-columns: 1fr; }
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .dropzone {
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      background: rgba(15, 23, 42, 0.5);
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .dropzone:hover {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.04);
+    }
+
+    .dropzone-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .dropzone p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .preview-box {
+      margin-top: 1rem;
+      display: none;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--bg-card-border);
+      position: relative;
+    }
+
+    .preview-box img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.85rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-submit:hover {
       transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
     }
 
-    /* Architecture Grid */
+    /* Results Feed / Live Table */
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .result-item {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .result-item:hover {
+      transform: translateY(-2px);
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    .result-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 10px;
+      object-fit: cover;
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .result-info {
+      flex: 1;
+    }
+
+    .result-info h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .result-info p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .score-badge {
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .score-high {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+    }
+
+    .score-mid {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #fbbf24;
+    }
+
+    /* Architecture Features Grid */
     .section {
       max-width: 1200px;
       margin: 4rem auto;
@@ -291,16 +500,6 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    /* Swagger UI Container */
-    .api-preview-container {
-      background: #0f172a;
-      border: 1px solid var(--bg-card-border);
-      border-radius: 20px;
-      padding: 2rem;
-      margin-top: 2rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-    }
-
     /* Swagger Dark Theme Overrides */
     .swagger-ui {
       filter: invert(88%) hue-rotate(180deg);
@@ -333,9 +532,10 @@
       <span>PathBack</span>
     </div>
     <div class="nav-links">
-      <a href="#features">Features</a>
-      <a href="#architecture">Architecture</a>
-      <a href="#api-spec">REST API Docs</a>
+      <a href="#demo" onclick="switchTab('match')">Live AI Matcher</a>
+      <a href="#demo" onclick="switchTab('report')">Report Sighting</a>
+      <a href="#demo" onclick="switchTab('cctv')">CCTV Surveillance</a>
+      <a href="#demo" onclick="switchTab('api')">REST API Docs</a>
       <a href="https://github.com/nisantasrmh/PathBack" target="_blank" class="btn-github">
         <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor">
           <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
@@ -349,20 +549,253 @@
   <header class="hero">
     <div class="badge">
       <span class="badge-dot"></span>
-      Next-Gen Biometric Recovery v2.0
+      Biometric Missing Person Recovery System v2.0
     </div>
-    <h1>AI-Powered Missing Person<br><span class="hero-gradient-text">Facial Recovery System</span></h1>
+    <h1>Intelligent Facial Biometric<br><span class="hero-gradient-text">Search & Recovery System</span></h1>
     <p>
-      An intelligent multi-modal platform assisting law enforcement and citizens in identifying, locating, and tracking missing individuals using FAISS vector indexing, YuNet face detection, and SFace metric embeddings.
+      An advanced computer vision platform assisting law enforcement and citizens in identifying, locating, and tracking missing individuals using FAISS vector indexing, YuNet face detection, and SFace metric embeddings.
     </p>
-    <div class="hero-actions">
-      <a href="#api-spec" class="btn-primary">⚡ Explore OpenAPI Interactive Docs</a>
-      <a href="https://github.com/nisantasrmh/PathBack" target="_blank" class="btn-secondary">View GitHub Repository</a>
-    </div>
   </header>
 
-  <!-- Features Grid -->
-  <section class="section" id="features">
+  <!-- Navigation Tabs -->
+  <div class="tabs-nav-container" id="demo">
+    <div class="tabs-nav">
+      <button class="tab-btn active" id="tab-btn-match" onclick="switchTab('match')">
+        🎯 1-to-N AI Face Matcher
+      </button>
+      <button class="tab-btn" id="tab-btn-report" onclick="switchTab('report')">
+        🚨 Report Public Sighting
+      </button>
+      <button class="tab-btn" id="tab-btn-cctv" onclick="switchTab('cctv')">
+        📹 CCTV Stream Scanner
+      </button>
+      <button class="tab-btn" id="tab-btn-api" onclick="switchTab('api')">
+        ⚡ Interactive OpenAPI Docs
+      </button>
+    </div>
+  </div>
+
+  <!-- Interactive Sandbox Area -->
+  <main class="app-sandbox">
+    
+    <!-- 1. AI Face Matcher Tab -->
+    <div class="tab-pane active" id="tab-match">
+      <div class="sandbox-card">
+        <div class="split-grid">
+          <div>
+            <h3 style="margin-bottom: 0.5rem; font-size: 1.3rem;">Upload Sighting Photo</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+              Performs instant sub-millisecond vector cosine search against all registered missing persons.
+            </p>
+
+            <div class="dropzone" onclick="document.getElementById('face-upload').click()">
+              <div class="dropzone-icon">📸</div>
+              <p><strong>Click to upload photograph</strong> or drag & drop</p>
+              <p style="font-size: 0.78rem; margin-top: 0.25rem;">Supports JPG, PNG, WEBP (Max 10MB)</p>
+              <input type="file" id="face-upload" accept="image/*" style="display:none" onchange="handleImagePreview(event, 'match-preview')">
+            </div>
+
+            <div class="preview-box" id="match-preview">
+              <img id="match-preview-img" src="" alt="Preview">
+            </div>
+
+            <div class="form-group" style="margin-top: 1.5rem;">
+              <label>Match Sensitivity Threshold (Cosine Similarity)</label>
+              <input type="range" class="form-input" min="40" max="95" value="60" id="conf-slider" oninput="document.getElementById('conf-val').innerText = this.value + '%'">
+              <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem;">
+                <span>Lenient (40%)</span>
+                <strong id="conf-val" style="color:#60a5fa;">60% (Recommended)</strong>
+                <span>Strict (95%)</span>
+              </div>
+            </div>
+
+            <button class="btn-submit" onclick="simulateMatch()">🚀 Run AI Biometric Match</button>
+          </div>
+
+          <div>
+            <div class="results-header">
+              <h3 style="font-size: 1.3rem;">Ranked AI Matches</h3>
+              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: #60a5fa;" id="match-status">Ready</span>
+            </div>
+
+            <div id="results-list">
+              <!-- Result 1 -->
+              <div class="result-item">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="result-avatar" alt="Target">
+                <div class="result-info">
+                  <h4>Aarav Sharma (Age: 17)</h4>
+                  <p><strong>Last Seen:</strong> Sector 18 Metro, New Delhi</p>
+                  <p><strong>Registered By:</strong> Officer V. Singh</p>
+                </div>
+                <div class="score-badge score-high">
+                  92.4%<br><span style="font-size:0.7rem; font-weight:normal;">MATCH</span>
+                </div>
+              </div>
+
+              <!-- Result 2 -->
+              <div class="result-item">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" class="result-avatar" alt="Target">
+                <div class="result-info">
+                  <h4>Rohan Verma (Age: 22)</h4>
+                  <p><strong>Last Seen:</strong> Bus Terminal, Jaipur</p>
+                  <p><strong>Registered By:</strong> Inspector R. Das</p>
+                </div>
+                <div class="score-badge score-mid">
+                  78.1%<br><span style="font-size:0.7rem; font-weight:normal;">REVIEW</span>
+                </div>
+              </div>
+
+              <!-- Result 3 -->
+              <div class="result-item">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80" class="result-avatar" alt="Target">
+                <div class="result-info">
+                  <h4>Devendra Kumar (Age: 35)</h4>
+                  <p><strong>Last Seen:</strong> Railway Station, Patna</p>
+                  <p><strong>Registered By:</strong> Sub-Inspector Kumar</p>
+                </div>
+                <div class="score-badge score-mid">
+                  64.5%<br><span style="font-size:0.7rem; font-weight:normal;">REVIEW</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Public Sighting Portal Tab -->
+    <div class="tab-pane" id="tab-report">
+      <div class="sandbox-card">
+        <h3 style="margin-bottom: 0.5rem; font-size: 1.3rem;">🚨 Submit a Citizen Sighting Tip</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+          If you have spotted an individual matching an active missing bulletin, submit details directly to police investigators.
+        </p>
+
+        <form id="sighting-form" onsubmit="handleSightingSubmit(event)">
+          <div class="split-grid">
+            <div>
+              <div class="form-group">
+                <label>Photograph of Sighted Person *</label>
+                <div class="dropzone" onclick="document.getElementById('sighting-photo').click()">
+                  <div class="dropzone-icon">📷</div>
+                  <p><strong>Upload or take a photo</strong></p>
+                  <input type="file" id="sighting-photo" accept="image/*" style="display:none" onchange="handleImagePreview(event, 'sighting-preview')">
+                </div>
+                <div class="preview-box" id="sighting-preview">
+                  <img id="sighting-preview-img" src="" alt="Sighting Preview">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Exact Location / Landmark *</label>
+                <input type="text" class="form-input" placeholder="e.g. Near Anand Vihar ISBT, Delhi" required>
+              </div>
+            </div>
+
+            <div>
+              <div class="form-group">
+                <label>Your Name / Contact Officer</label>
+                <input type="text" class="form-input" placeholder="e.g. Rahul Sharma (Citizen / Volunteer)">
+              </div>
+
+              <div class="form-group">
+                <label>Contact Phone Number *</label>
+                <input type="tel" class="form-input" placeholder="10-digit mobile number for verification" required>
+              </div>
+
+              <div class="form-group">
+                <label>Distinguishing Features / Clothing Observed</label>
+                <textarea class="form-textarea" rows="4" placeholder="Wearing navy hoodie, black sneakers, mole on right cheek..."></textarea>
+              </div>
+
+              <button type="submit" class="btn-submit" style="margin-top: 1rem;">
+                📩 Submit Sighting for Instant AI Scanning
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 3. CCTV Video Surveillance Scanner Tab -->
+    <div class="tab-pane" id="tab-cctv">
+      <div class="sandbox-card">
+        <h3 style="margin-bottom: 0.5rem; font-size: 1.3rem;">📹 CCTV Video Surveillance AI Pipeline</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+          Simulates the high-throughput video pipeline with OpenCV MOG2 background motion gating and IoU face tracking.
+        </p>
+
+        <div class="split-grid">
+          <div>
+            <div style="background:#0a0f1d; border:1px solid var(--bg-card-border); border-radius:12px; height:280px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+              <div style="font-size:3rem; margin-bottom:0.5rem;">📹</div>
+              <p style="color:var(--text-muted); font-size:0.9rem;">CCTV Stream Simulation Feed</p>
+              <div style="position:absolute; top:12px; left:12px; background:rgba(239, 68, 68, 0.85); color:white; padding:0.25rem 0.65rem; border-radius:6px; font-size:0.75rem; font-weight:700; display:flex; align-items:center; gap:0.4rem;">
+                <span style="width:6px; height:6px; background:white; border-radius:50%; animation:pulse 1s infinite;"></span> LIVE STREAM
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem; margin-top:1.25rem;">
+              <div style="background:rgba(15,23,42,0.8); border:1px solid var(--bg-card-border); border-radius:10px; padding:0.85rem; text-align:center;">
+                <div style="font-size:0.75rem; color:var(--text-muted);">PIPELINE FPS</div>
+                <div style="font-size:1.35rem; font-weight:700; color:#38bdf8;" id="sim-fps">42.8</div>
+              </div>
+              <div style="background:rgba(15,23,42,0.8); border:1px solid var(--bg-card-border); border-radius:10px; padding:0.85rem; text-align:center;">
+                <div style="font-size:0.75rem; color:var(--text-muted);">MOG2 GATING</div>
+                <div style="font-size:1.35rem; font-weight:700; color:#10b981;">Active</div>
+              </div>
+              <div style="background:rgba(15,23,42,0.8); border:1px solid var(--bg-card-border); border-radius:10px; padding:0.85rem; text-align:center;">
+                <div style="font-size:0.75rem; color:var(--text-muted);">TRACKS</div>
+                <div style="font-size:1.35rem; font-weight:700; color:#f59e0b;" id="sim-tracks">4</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4 style="font-size:1.1rem; margin-bottom:0.75rem;">Real-Time Detections Feed</h4>
+            
+            <div class="result-item" style="border-left: 4px solid #ef4444;">
+              <div class="result-info">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <h4>🚨 ALERT: Target ID #104 Identified</h4>
+                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">00:03:14</span>
+                </div>
+                <p>Tracked face match for <strong>Aarav Sharma</strong> (Confidence: 89.2%)</p>
+                <div style="margin-top:0.4rem; font-size:0.8rem; color:#94a3b8;">
+                  Bounding Box: [142, 88, 76, 92] • MOG2 Motion Triggered
+                </div>
+              </div>
+            </div>
+
+            <div class="result-item" style="border-left: 4px solid #3b82f6;">
+              <div class="result-info">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <h4>ℹ️ Track #12 Discarded (Below Threshold)</h4>
+                  <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);">00:03:10</span>
+                </div>
+                <p>Non-target pedestrian face tracked and deduplicated</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Interactive OpenAPI Docs Tab -->
+    <div class="tab-pane" id="tab-api">
+      <div class="sandbox-card" style="padding: 1.5rem;">
+        <h3 style="margin-bottom: 0.5rem; font-size: 1.3rem;">⚡ Enterprise OpenAPI 3.1 Specification</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+          Interactive documentation powered by Swagger UI. Inspect request models, response schemas, and authentication headers.
+        </p>
+        <div id="swagger-ui"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Architecture Features Grid -->
+  <section class="section" id="architecture">
     <div class="section-title">
       <h2>Engineered for High-Throughput Search</h2>
       <p>State-of-the-art computer vision algorithms optimized for edge & server environments</p>
@@ -392,18 +825,6 @@
     </div>
   </section>
 
-  <!-- Interactive API Docs Section -->
-  <section class="section" id="api-spec">
-    <div class="section-title">
-      <h2>OpenAPI 3.1 Interactive Specification</h2>
-      <p>Explore the complete REST endpoints for cases, sightings, biometrics, and surveillance</p>
-    </div>
-
-    <div class="api-preview-container">
-      <div id="swagger-ui"></div>
-    </div>
-  </section>
-
   <!-- Footer -->
   <footer>
     <p>
@@ -412,10 +833,28 @@
     </p>
   </footer>
 
-  <!-- Swagger UI Bundle -->
+  <!-- Swagger UI Scripts -->
   <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js"></script>
   <script>
-    window.onload = function() {
+    let swaggerLoaded = false;
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+      const activePane = document.getElementById('tab-' + tabId);
+      const activeBtn = document.getElementById('tab-btn-' + tabId);
+
+      if (activePane) activePane.classList.add('active');
+      if (activeBtn) activeBtn.classList.add('active');
+
+      if (tabId === 'api' && !swaggerLoaded) {
+        initSwagger();
+      }
+    }
+
+    function initSwagger() {
+      swaggerLoaded = true;
       SwaggerUIBundle({
         url: "./openapi.json",
         dom_id: '#swagger-ui',
@@ -427,7 +866,46 @@
         layout: "BaseLayout",
         defaultModelsExpandDepth: 1
       });
-    };
+    }
+
+    function handleImagePreview(event, previewContainerId) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const container = document.getElementById(previewContainerId);
+          const img = container.querySelector('img');
+          img.src = e.target.result;
+          container.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function simulateMatch() {
+      const statusEl = document.getElementById('match-status');
+      statusEl.innerText = "Scanning 128-D FAISS index...";
+      statusEl.style.color = "#fbbf24";
+
+      setTimeout(() => {
+        statusEl.innerText = "Match Complete (3 Found)";
+        statusEl.style.color = "#34d399";
+      }, 700);
+    }
+
+    function handleSightingSubmit(e) {
+      e.preventDefault();
+      alert("✅ Sighting Report Submitted Successfully! SFace deep embeddings extracted and queued for law enforcement verification.");
+      e.target.reset();
+      document.getElementById('sighting-preview').style.display = 'none';
+    }
+
+    // Interval to simulate live CCTV stream telemetry
+    setInterval(() => {
+      const fps = (41.5 + Math.random() * 3.5).toFixed(1);
+      const fpsEl = document.getElementById('sim-fps');
+      if (fpsEl) fpsEl.innerText = fps;
+    }, 1500);
   </script>
 </body>
 </html>
