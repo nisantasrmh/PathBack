@@ -13,8 +13,10 @@ from pages.helper.utils import (
     extract_face_mesh_landmarks,
 )
 from pages.helper.streamlit_helpers import require_login
+from pages.helper.theme import inject_custom_theme
 
 st.set_page_config(page_title="PathBack - Register Case", page_icon="🔍", layout="wide")
+inject_custom_theme()
 
 if "login_status" not in st.session_state:
     st.warning("Please log in from the Home page to register cases.")

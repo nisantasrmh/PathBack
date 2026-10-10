@@ -2,8 +2,10 @@ import os
 import streamlit as st
 from pages.helper import db_queries
 from pages.helper.streamlit_helpers import require_login
+from pages.helper.theme import inject_custom_theme
 
 st.set_page_config(page_title="PathBack - Case Management", page_icon="📂", layout="wide")
+inject_custom_theme()
 
 if "login_status" not in st.session_state:
     st.warning("Please log in from the Home page to view and manage cases.")
