@@ -3,8 +3,10 @@ import streamlit as st
 from pages.helper import db_queries, match_algo
 from pages.helper.data_models import ConfidenceTier
 from pages.helper.streamlit_helpers import require_login
+from pages.helper.theme import inject_custom_theme
 
 st.set_page_config(page_title="PathBack - AI Facial Match", page_icon="🎯", layout="wide")
+inject_custom_theme()
 
 if "login_status" not in st.session_state:
     st.warning("Please log in from the Home page to access AI Case Matching.")

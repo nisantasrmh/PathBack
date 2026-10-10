@@ -11,6 +11,7 @@ from pages.helper.utils import (
     extract_deep_face_embeddings,
     extract_face_mesh_landmarks,
 )
+from pages.helper.theme import inject_custom_theme
 
 st.set_page_config(
     page_title="PathBack - Sighting & Missing Person Portal",
@@ -18,6 +19,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
     layout="centered"
 )
+inject_custom_theme()
 
 st.title("🚨 PathBack — Report a Sighting")
 st.markdown("If you have spotted a missing person or someone needing help, upload their photo or snap a picture.")

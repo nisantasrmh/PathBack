@@ -38,11 +38,14 @@ from pages.helper.match_algo import (
     calculate_confidence_tier,
 )
 
+from pages.helper.theme import inject_custom_theme
+
 st.set_page_config(
     page_title="PathBack - CCTV & Video Scanner",
     page_icon="📹",
     layout="wide"
 )
+inject_custom_theme()
 
 if "login_status" not in st.session_state:
     st.warning("Please log in from the Home page to access CCTV & Video Scanning.")

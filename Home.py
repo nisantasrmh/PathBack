@@ -6,6 +6,7 @@ import streamlit_authenticator as stauth
 
 from pages.helper import db_queries
 from pages.helper.utils import ensure_models_exist
+from pages.helper.theme import inject_custom_theme
 
 st.set_page_config(
     page_title="PathBack - AI Missing Person Recovery System",
@@ -13,6 +14,9 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# Apply Modern Dark Glassmorphic Design System
+inject_custom_theme()
 
 # Ensure models are prepared on startup
 ensure_models_exist()
@@ -43,17 +47,29 @@ except Exception:
 
 
 if st.session_state.get("authentication_status"):
-    authenticator.logout("🚪 Logout", "sidebar")
+    authenticator.logout("🚪 Sign Out", "sidebar")
 
     st.session_state["login_status"] = True
     user_info = config["credentials"]["usernames"][st.session_state["username"]]
     st.session_state["user"] = user_info["name"]
 
-    # Header section
-    st.title(f"Welcome, {user_info['name']} 👋")
-    st.markdown(f"**Jurisdiction / Area:** {user_info['area']}, {user_info['city']} &nbsp;|&nbsp; **Role:** `{user_info['role']}`")
-    
-    st.divider()
+    # Header section with Hero Banner
+    st.markdown(f"""
+    <div class="pb-hero-banner">
+      <div class="pb-badge">
+        <span class="pb-pulse-dot"></span>
+        Investigation Portal Active
+      </div>
+      <h1 style="font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.4rem;">
+        Welcome, {user_info['name']} 👋
+      </h1>
+      <p style="color: var(--pb-text-muted); font-size: 0.95rem;">
+        <strong>Jurisdiction / Command:</strong> {user_info['area']}, {user_info['city']} &nbsp;•&nbsp; 
+        <strong>Access Level:</strong> <span style="color:#60a5fa; font-weight:600;">{user_info['role']}</span> &nbsp;•&nbsp;
+        <strong>Biometrics:</strong> <span style="color:#34d399; font-weight:600;">YuNet + SFace 128-D Active</span>
+      </p>
+    </div>
+    """, unsafe_allow_html=True)
 
     # Metrics section
     found_cases = db_queries.get_registered_cases_count(user_info["name"], "F")
@@ -61,34 +77,68 @@ if st.session_state.get("authentication_status"):
     all_public = db_queries.list_public_cases()
 
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("🚨 Active Missing Cases", len(non_found_cases))
-    m2.metric("✅ Solved / Found Cases", len(found_cases))
-    m3.metric("📍 Total Public Sightings", len(all_public) if all_public else 0)
-    m4.metric("🤖 AI Engine", "SFace Deep Metric")
+    m1.metric("🚨 Active Missing Cases", len(non_found_cases) if non_found_cases else 0)
+    m2.metric("✅ Solved / Reunited", len(found_cases) if found_cases else 0)
+    m3.metric("📍 Public Sighting Tips", len(all_public) if all_public else 0)
+    m4.metric("⚡ Vector Indexing", "FAISS + SFace")
 
-    st.divider()
+    st.write("")
+    st.write("")
 
-    st.subheader("⚡ Quick Navigation & Operations")
+    st.subheader("⚡ Core Operational Modules")
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        st.info("### 📋 Register Case\nRecord a new missing person profile with AI facial feature scanning.")
-        st.page_link("pages/1_Register_New_Case.py", label="Go to Register Case ➡️", icon="📝")
+        st.markdown("""
+        <div class="pb-action-card">
+          <div>
+            <div class="pb-action-icon">📋</div>
+            <h3>Register Case</h3>
+            <p>Record a new missing person bulletin with automated YuNet face scanning and 128-D deep metric feature extraction.</p>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+        st.page_link("pages/1_Register_New_Case.py", label="Open Registration ➡️", icon="📝")
 
     with col2:
-        st.info("### 📂 All Cases\nBrowse, filter, and track all active and resolved missing person investigations.")
-        st.page_link("pages/2_All_Cases.py", label="View All Cases ➡️", icon="🔍")
+        st.markdown("""
+        <div class="pb-action-card">
+          <div>
+            <div class="pb-action-icon">📂</div>
+            <h3>Case Records</h3>
+            <p>Search, filter, and track all missing person profiles, citizen reports, and manage case resolution status.</p>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+        st.page_link("pages/2_All_Cases.py", label="Manage Cases ➡️", icon="🔍")
 
     with col3:
-        st.info("### 🎯 Match Engine\nRun automated deep facial comparisons between sightings and missing profiles.")
+        st.markdown("""
+        <div class="pb-action-card">
+          <div>
+            <div class="pb-action-icon">🎯</div>
+            <h3>AI Match Engine</h3>
+            <p>Execute sub-millisecond vector similarity search comparing missing records against incoming citizen sightings.</p>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
         st.page_link("pages/3_Match_Cases.py", label="Launch AI Matching ➡️", icon="⚡")
 
     with col4:
-        st.info("### 📹 CCTV Scanner\nScan CCTV footage and surveillance video clips frame-by-frame for alerts.")
-        st.page_link("pages/5_CCTV_Video_Scanner.py", label="Open CCTV Scanner ➡️", icon="🎥")
+        st.markdown("""
+        <div class="pb-action-card">
+          <div>
+            <div class="pb-action-icon">📹</div>
+            <h3>CCTV Scanner</h3>
+            <p>Process live video and surveillance feeds with MOG2 motion-detection gating and IoU multi-face tracking.</p>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+        st.page_link("pages/5_CCTV_Video_Scanner.py", label="Launch Video Scanner ➡️", icon="🎥")
 
+    st.write("")
     st.divider()
-    st.markdown("💡 *Field officers and citizens can submit sightings directly via the mobile portal (`mobile_app.py`).*")
+    st.caption("💡 Field officers and citizen volunteers can submit sighting tips directly from mobile via the mobile portal (`:8502`).")
 
 elif st.session_state.get("authentication_status") == False:
     st.error("Username/password is incorrect.")

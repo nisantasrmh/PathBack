@@ -6,12 +6,14 @@ and troubleshooting tips for investigators, administrators, and field officers.
 """
 
 import streamlit as st
+from pages.helper.theme import inject_custom_theme
 
 st.set_page_config(
     page_title="PathBack - Guide & Help Center",
     page_icon="❓",
     layout="wide"
 )
+inject_custom_theme()
 
 st.title("❓ PathBack Help & Operational Guide")
 st.markdown(
