@@ -1,0 +1,8 @@
+backend/
+Home.py
+mobile_app.py
+pages/
+models/
+requirements.txt
+sqlite_database.db
+pyproject.toml
