@@ -1,7 +1,6 @@
 {
-  "framework": null,
   "buildCommand": null,
-  "outputDirectory": ".",
+  "outputDirectory": "docs",
   "cleanUrls": true,
   "rewrites": [
     {
