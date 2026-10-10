@@ -25,7 +25,9 @@ from pages.helper.data_models import (
     Sighting,
 )
 
-sqlite_url = "sqlite:///sqlite_database.db"
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+DB_PATH = os.path.join(ROOT_DIR, "sqlite_database.db")
+sqlite_url = f"sqlite:///{DB_PATH}"
 engine = create_engine(sqlite_url, connect_args={"check_same_thread": False})
 
 EARTH_RADIUS_KM = 6371.0088

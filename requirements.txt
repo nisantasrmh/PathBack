@@ -11,4 +11,6 @@ mediapipe
 streamlit-authenticator==0.4.2
 pyyaml
 faiss-cpu>=1.7.4
-
+fastapi>=0.110.0
+uvicorn>=0.28.0
+python-multipart>=0.0.9

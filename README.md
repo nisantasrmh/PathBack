@@ -88,9 +88,20 @@ pip install -r requirements.txt
 
 ---
 
+---
+
 ## 💻 Running the Applications
 
-### 1. Launch the Desktop / Admin Investigation Portal
+### 1. Launch the Enterprise FastAPI Backend Server (:8000)
+```bash
+python .\run_backend.py --port 8000
+```
+*Or execute:* `.\run_backend.ps1`  
+*API Base URL:* **[http://localhost:8000](http://localhost:8000)**  
+*Interactive Swagger / OpenAPI Docs:* **[http://localhost:8000/docs](http://localhost:8000/docs)**  
+*Redoc Documentation:* **[http://localhost:8000/redoc](http://localhost:8000/redoc)**
+
+### 2. Launch the Desktop / Admin Investigation Portal (:8501)
 ```bash
 python -m streamlit run .\Home.py
 ```
@@ -103,7 +114,7 @@ python -m streamlit run .\Home.py
 
 ---
 
-### 2. Launch the Mobile / Citizen Sighting Portal
+### 3. Launch the Mobile / Citizen Sighting Portal (:8502)
 ```bash
 python -m streamlit run .\mobile_app.py --server.port 8502
 ```
