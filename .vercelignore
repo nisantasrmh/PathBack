@@ -5,4 +5,3 @@ pages/
 models/
 requirements.txt
 sqlite_database.db
-pyproject.toml
