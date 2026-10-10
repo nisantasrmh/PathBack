@@ -14,7 +14,7 @@ if __name__ == "__main__":
     parser.add_argument("--reload", action="store_true", help="Enable auto-reload for development")
     args = parser.parse_args()
 
-    print(f"🚀 Starting PathBack FastAPI Backend on http://{args.host}:{args.port}")
-    print(f"📚 OpenAPI Documentation available at http://localhost:{args.port}/docs")
+    print(f"[PathBack] Starting FastAPI Backend on http://{args.host}:{args.port}")
+    print(f"[PathBack] OpenAPI Documentation available at http://localhost:{args.port}/docs")
 
     uvicorn.run("backend.api:app", host=args.host, port=args.port, reload=args.reload)
